@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Filees</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFBFF;--surface:#FFFFFF;--ink:#14152B;--muted:#5B5E76;--line:#E7E9F5;
+    --grad:linear-gradient(135deg,#6338F5 0%,#293FE5 55%,#35B5FD 100%);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.65;}
+  h1,h2{font-family:'Sora',system-ui,sans-serif;letter-spacing:-0.01em;}
+  a{color:#293FE5;}
+  .wrap{max-width:720px;margin:0 auto;padding:0 28px;}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:26px 0;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Sora';font-weight:700;font-size:20px;text-decoration:none;color:var(--ink);}
+  .brand .mark{width:30px;height:30px;border-radius:9px;background:var(--grad);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .brand .mark svg{width:16px;height:16px;}
+  main{padding:36px 0 90px;}
+  h1{font-size:32px;font-weight:800;margin:0 0 8px;}
+  .updated{color:var(--muted);font-size:14px;margin-bottom:40px;}
+  h2{font-size:19px;font-weight:700;margin:40px 0 12px;}
+  p{margin:0 0 14px;color:var(--ink);font-size:15.5px;}
+  ul{margin:0 0 14px;padding-left:20px;}
+  li{margin-bottom:8px;font-size:15.5px;}
+  .callout{
+    background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:28px 0;
+  }
+  .callout p{margin:0;color:var(--muted);font-size:14.5px;}
+  footer{border-top:1px solid var(--line);padding:28px 0;}
+  .footer-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13.5px;color:var(--muted);}
+  .footer-row a{color:var(--muted);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <a class="brand" href="index.html">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg></span>
+      Filees
+    </a>
+  </nav>
+</div>
+
+<main class="wrap">
+  <h1>Privacy Policy</h1>
+  <p class="updated">Last updated: September 2026</p>
+
+  <p>Filees is a Chrome extension that lets you drag and drop Word and Excel files onto the Google Docs or Google Sheets home screen, so they open as converted, ready-to-edit Google Docs or Sheets files. This page explains what Filees accesses, what it does with it, and what it never does.</p>
+
+  <div class="callout">
+    <p><strong>In short:</strong> Filees only touches the specific file you choose to drop or import. It does not read, scan, or store the rest of your Google Drive, and it does not send your files anywhere except Google's own servers to perform the conversion you asked for.</p>
+  </div>
+
+  <h2>What Filees accesses</h2>
+  <p>Filees requests Google's <code>drive.file</code> permission scope. This is a narrow, per-file scope — it only grants access to files that you personally create or explicitly open through Filees. It does <em>not</em> grant access to your entire Drive, your other documents, or files you haven't interacted with through the extension.</p>
+  <p>When you drop or import a file, Filees uploads that specific file to your own Google Drive using this permission, asks Google's Drive API to convert it into a native Google Doc or Sheet, and then opens the result in a new tab.</p>
+
+  <h2>What Filees does not do</h2>
+  <ul>
+    <li>Filees does not store, log, or retain your files on any server we operate. We don't operate a file-storage server — the upload goes directly from your browser to Google's own Drive API.</li>
+    <li>Filees does not read the contents of your files for any purpose other than the conversion you requested.</li>
+    <li>Filees does not sell, share, or transfer your data to any third party.</li>
+    <li>Filees does not access files or folders you haven't personally chosen to open through the extension.</li>
+    <li>Filees does not track your browsing activity outside of the Google Docs and Sheets home screens where it operates.</li>
+  </ul>
+
+  <h2>Local settings</h2>
+  <p>Filees stores a small amount of preference data locally in your browser (for example, whether the drop-zone widget is enabled or collapsed) using Chrome's built-in storage APIs. This data stays on your device and is not transmitted to us.</p>
+
+  <h2>Authentication</h2>
+  <p>Filees uses Google's standard OAuth sign-in flow to request the <code>drive.file</code> permission. Your Google credentials are handled entirely by Google — Filees never sees or stores your password.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>If this policy changes, we'll update the date at the top of this page. Continued use of Filees after a change means you accept the updated policy.</p>
+</main>
+
+<div class="wrap">
+  <footer>
+    <div class="footer-row">
+      <span>© 2026 Filees</span>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Filees — a quick drop, instead of File &gt; Import</title>
+<meta name="description" content="Filees is a free Chrome extension. Drag a .docx or .xlsx file onto Google Docs or Sheets and it opens instantly — no menus, no backend, just Google's own Drive API.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFBFF;
+    --surface:#FFFFFF;
+    --ink:#14152B;
+    --muted:#5B5E76;
+    --line:#E7E9F5;
+    --grad:linear-gradient(135deg,#6338F5 0%,#293FE5 55%,#35B5FD 100%);
+    --grad-soft:linear-gradient(135deg,rgba(99,56,245,.08),rgba(41,63,229,.06),rgba(53,181,253,.08));
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Sora',system-ui,sans-serif;margin:0;letter-spacing:-0.01em;}
+  a{color:inherit;}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px;}
+
+  /* ---- nav ---- */
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 0;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Sora';font-weight:700;font-size:20px;}
+  .brand .mark{
+    width:30px;height:30px;border-radius:9px;background:var(--grad);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .brand .mark svg{width:16px;height:16px;}
+  nav a.navlink{font-size:14px;color:var(--muted);text-decoration:none;font-weight:500;}
+  nav a.navlink:hover{color:var(--ink);}
+
+  /* ---- hero ---- */
+  header.hero{padding:64px 0 40px;position:relative;overflow:hidden;}
+  .hero-grid{
+    display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;
+  }
+  .eyebrow{
+    display:inline-block;font-size:13px;color:#4B3FE0;font-weight:600;
+    background:var(--grad-soft);padding:6px 12px;border-radius:20px;margin-bottom:18px;
+  }
+  h1.headline{font-size:44px;font-weight:800;line-height:1.12;max-width:560px;}
+  h1.headline .accent{
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  p.sub{font-size:17px;color:var(--muted);max-width:480px;margin:20px 0 30px;}
+  .cta-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--grad);color:#fff;border:none;padding:13px 26px;border-radius:11px;
+    font-family:'Inter';font-weight:600;font-size:15px;text-decoration:none;display:inline-block;
+    box-shadow:0 10px 24px rgba(41,63,229,.25);
+  }
+  .btn-ghost{
+    padding:13px 22px;border-radius:11px;font-weight:600;font-size:15px;text-decoration:none;
+    color:var(--ink);border:1px solid var(--line);background:var(--surface);
+  }
+  .trust-row{
+    display:flex;align-items:flex-start;gap:10px;margin-top:26px;max-width:460px;
+    padding-top:20px;border-top:1px solid var(--line);
+  }
+  .trust-row svg{width:18px;height:18px;flex-shrink:0;margin-top:1px;}
+  .trust-row span{font-size:13.5px;color:var(--muted);line-height:1.5;}
+  .hero-visual{
+    background:var(--surface);border:1px solid var(--line);border-radius:20px;
+    padding:28px;box-shadow:0 24px 60px rgba(20,21,43,.06);
+  }
+  .drop-card{
+    border:2px dashed #90B8F8;border-radius:14px;
+    background:linear-gradient(135deg,#EEF4FE,#F3ECFD);
+    padding:26px 20px;text-align:center;
+  }
+  .drop-icon{
+    width:48px;height:48px;border-radius:50%;background:var(--grad);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 14px;
+  }
+  .drop-icon svg{width:22px;height:22px;}
+  .drop-card .t{font-family:'Sora';font-weight:700;font-size:15px;color:#293FE5;}
+  .drop-card .s{font-size:13px;color:var(--muted);margin-top:6px;}
+  .filerow{
+    display:flex;align-items:center;gap:10px;margin-top:16px;padding:10px 12px;
+    border:1px solid var(--line);border-radius:10px;font-size:13px;color:var(--muted);
+  }
+  .filerow .dot{width:8px;height:8px;border-radius:50%;background:var(--grad);flex-shrink:0;}
+
+  /* ---- how it works ---- */
+  section.how{padding:70px 0;border-top:1px solid var(--line);}
+  .how-head{max-width:520px;margin-bottom:44px;}
+  .how-head h2{font-size:30px;font-weight:700;}
+  .how-head p{color:var(--muted);margin-top:12px;font-size:16px;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;}
+  .step .num{
+    font-family:'Sora';font-weight:800;font-size:14px;color:#fff;
+    width:30px;height:30px;border-radius:9px;background:var(--grad);
+    display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+  }
+  .step h3{font-size:17px;font-weight:700;margin-bottom:8px;}
+  .step p{color:var(--muted);font-size:14.5px;margin:0;}
+
+  /* ---- formats ---- */
+  section.formats{padding:0 0 70px;}
+  .formats-inner{
+    border:1px solid var(--line);border-radius:20px;background:var(--surface);
+    padding:36px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  }
+  .formats-text h2{font-size:22px;font-weight:700;}
+  .formats-text p{color:var(--muted);margin-top:8px;font-size:14.5px;max-width:420px;}
+  .chip-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .chip{
+    font-family:'Sora';font-weight:700;font-size:13px;padding:8px 14px;border-radius:9px;
+    background:var(--grad-soft);color:#4B3FE0;
+  }
+
+  /* ---- footer ---- */
+  footer{border-top:1px solid var(--line);padding:32px 0;}
+  .footer-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  .footer-brand{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13.5px;}
+  .footer-links{display:flex;gap:22px;font-size:13.5px;}
+  .footer-links a{color:var(--muted);text-decoration:none;}
+  .footer-links a:hover{color:var(--ink);}
+
+  @media (max-width:760px){
+    .hero-grid{grid-template-columns:1fr;gap:36px;}
+    h1.headline{font-size:32px;}
+    .steps{grid-template-columns:1fr;gap:28px;}
+    .formats-inner{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="brand">
+      <span class="mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+      </span>
+      Filees
+    </div>
+    <a class="navlink" href="privacy.html">Privacy Policy</a>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Free Chrome extension</span>
+      <h1 class="headline">Drop a file.<br>Skip <span class="accent">File &gt; Import</span> entirely.</h1>
+      <p class="sub">Filees is a quick-drop solution for .docx and .xlsx files — drag one onto Google Docs or Sheets and it opens right away, no menus.</p>
+      <div class="cta-row">
+        <a class="btn-primary" href="#">Add to Chrome — it's free</a>
+        <a class="btn-ghost" href="privacy.html">Read the privacy policy</a>
+      </div>
+      <div class="trust-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#293FE5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V6l8-4z"/></svg>
+        <span>No backend, no third-party storage — Filees talks directly to Google's own Drive API from your browser.</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="drop-card">
+        <div class="drop-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+        </div>
+        <div class="t">Drop a file to open it instantly</div>
+        <div class="s">Supports .docx and .xlsx</div>
+      </div>
+      <div class="filerow"><span class="dot"></span> Resume_2026_Final.docx</div>
+      <div class="filerow"><span class="dot"></span> Q3_Budget_Report.xlsx</div>
+    </div>
+  </div>
+</header>
+
+<section class="how">
+  <div class="wrap">
+    <div class="how-head">
+      <h2>Install, connect, drop — that's it</h2>
+      <p>Set up once, then it's just there whenever you need it.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3>Install Filees</h3>
+        <p>Add it from the Chrome Web Store. One click, nothing to configure.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3>Connect your Google account</h3>
+        <p>A one-time sign-in through Google, so Filees can open files in your own Drive.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3>Drop your file, use it</h3>
+        <p>Drag a .docx or .xlsx onto Docs or Sheets — or use the Import button — and it opens right there.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="formats">
+  <div class="wrap">
+    <div class="formats-inner">
+      <div class="formats-text">
+        <h2>A quick-drop solution for two formats</h2>
+        <p>Filees is built around avoiding File &gt; Import for the files you use most — Word and Excel documents.</p>
+      </div>
+      <div class="chip-row">
+        <span class="chip">.docx</span>
+        <span class="chip">.xlsx</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="footer-brand">
+      <span class="mark" style="width:22px;height:22px;border-radius:6px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/></svg>
+      </span>
+      © 2026 Filees
+    </div>
+    <div class="footer-links">
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
